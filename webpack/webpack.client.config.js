@@ -1,9 +1,9 @@
-const path = require('path');
-const webpack = require('webpack');
-const extract = require('mini-css-extract-plugin');
+const path = require('path')
+const webpack = require('webpack')
+const ExtracCssPlugin = require('mini-css-extract-plugin')
 
 const config = {
-  entry: ["regenerator-runtime/runtime", path.resolve(__dirname, '../source/client/index.js')],
+  entry: ['regenerator-runtime/runtime', path.resolve(__dirname, '../source/client/index.js')],
   output: {
     path: path.resolve(__dirname, '../public'),
     filename: 'client.js'
@@ -12,34 +12,33 @@ const config = {
     rules: [
       {
         test: /\.jsx?$/,
-        loader: "babel-loader",
-        exclude: "/(node_modules)/",
+        loader: 'babel-loader',
+        exclude: '/(node_modules)/',
         options: {
           presets: [
             [
+              '@babel/preset-env',
               {
-                targets: "> 0.25%, not dead"
+                targets: '> 0.25%, not dead'
               }
-            ], 
-            '@babel/preset-react',
-          ],
-        },
+            ],
+            '@babel/preset-react'
+          ]
+        }
       },
       {
         test: /\.css$/,
         use: [
-          { 
-            loader: extract.loader,
-          }, 
+          { loader: ExtracCssPlugin.loader },
           {
             loader: 'css-loader',
             options: {
-              modules: true,
-            },
-          },
-        ],
-      },
-    ],
+              modules: true
+            }
+          }
+        ]
+      }
+    ]
   },
   resolve: {
     extensions: ['.js', '.jsx', '.css'],
@@ -50,8 +49,8 @@ const config = {
     }
   },
   plugins: [
-    new extract({
-      filename: "styles.css"
+    new ExtracCssPlugin({
+      filename: 'styles.css'
     }),
     new webpack.DefinePlugin({
       IS_PRODUCTION: process.env.NODE_ENV === 'production' ? true : false,
@@ -59,8 +58,7 @@ const config = {
       ASSETS: JSON.stringify(process.env.NODE_ENV === 'production' ? 'http://localhost:3000/public' : 'http://localhost:3000/public'),
     })
   ],
-  target: 'web',
+  target: 'web'
 }
 
-
-module.exports = config;
+module.exports = config
