@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "watch": "set NODE_ENV=development&& webpack --watch --mode development",
+    "build": "set NODE_ENV=production&& webpack -p --mode production",
+    "server": "nodemon ./build/server.js",
+    "deploy": "npm run build && now --prod"
   },
   "author": "armandojes",
   "license": "ISC",
