@@ -45,7 +45,7 @@ const config = {
     alias: {
       hooks: path.resolve(__dirname, '../source/app/hooks'),
       helpers: path.resolve(__dirname, '../source/app/helpers'),
-      components: path.resolve(__dirname, '../source/app/components'),
+      components: path.resolve(__dirname, '../source/app/components')
     }
   },
   plugins: [

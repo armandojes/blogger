@@ -31,6 +31,7 @@
     "nodemon": "^2.0.2",
     "now": "^16.7.3",
     "now-cli": "0.0.0",
+    "prop-types": "^15.7.2",
     "redux-devtools-extension": "^2.13.8",
     "redux-logger": "^3.0.6",
     "webpack": "^4.41.5",
