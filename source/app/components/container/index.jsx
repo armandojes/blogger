@@ -8,7 +8,10 @@ const Container = (props) => (
   </div>
 )
 Container.propTypes = {
-  children: PropTypes.array.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.object
+  ]),
   className: PropTypes.string
 }
 export default Container
