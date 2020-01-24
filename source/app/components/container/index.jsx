@@ -3,11 +3,12 @@ import style from './style'
 import PropTypes from 'prop-types'
 
 const Container = (props) => (
-  <div className={style.container}>
+  <div className={`${style.container} ${props.className || ''}`}>
     {props.children}
   </div>
 )
 Container.propTypes = {
-  children: PropTypes.String.isRequired
+  children: PropTypes.array.isRequired,
+  className: PropTypes.string
 }
 export default Container

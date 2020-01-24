@@ -1,4 +1,5 @@
-import React, { hydrate } from 'react-dom'
+import { hydrate } from 'react-dom'
+import React from 'react'
 import App from '../app'
 import { BrowserRouter } from 'react-router-dom'
 
@@ -10,4 +11,4 @@ function Client () {
   )
 }
 
-hydrate(<Client />, document.getElementById('render_targte'))
+hydrate(<Client />, document.getElementById('render_target'))

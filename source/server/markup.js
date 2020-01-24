@@ -13,6 +13,7 @@ function markup (content, states, head) {
     <body>
       <div id="render_target">${content || ''}</div>
       <script>${states}</script>
+      <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
       <script src="${ASSETS}/client.js"></script>
       </body>
     </html>

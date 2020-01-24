@@ -3,7 +3,7 @@ import style from './style'
 
 function Home () {
   return (
-    <section>
+    <section className={style.home}>
       hello home;
     </section>
   )
