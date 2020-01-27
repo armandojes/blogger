@@ -42,6 +42,8 @@ const config = {
     alias: {
       hooks: path.resolve(__dirname, '../source/app/hooks'),
       helpers: path.resolve(__dirname, '../source/app/helpers'),
+      api_helpers: path.resolve(__dirname, '../source/server/api/helpers'),
+      api_modules: path.resolve(__dirname, '../source/server/api/modules'),
       components: path.resolve(__dirname, '../source/app/components')
     }
   },
