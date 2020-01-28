@@ -3,15 +3,18 @@ import style from './style'
 import Container from 'components/container'
 import Prealoder from 'components/preloader'
 import { useState } from 'react-fetch-ssr'
+import requests from 'helpers/requests'
 
 function Login () {
   const [loading, setLoading] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setpassword] = useState('')
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault()
     setLoading(true)
+    const response = await requests.user.login({ username, password })
+    console.log(response)
   }
 
   return (

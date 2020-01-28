@@ -44,6 +44,7 @@ const config = {
       helpers: path.resolve(__dirname, '../source/app/helpers'),
       api_helpers: path.resolve(__dirname, '../source/server/api/helpers'),
       api_modules: path.resolve(__dirname, '../source/server/api/modules'),
+      api_models: path.resolve(__dirname, '../source/server/api/models'),
       components: path.resolve(__dirname, '../source/app/components')
     }
   },
@@ -54,7 +55,8 @@ const config = {
     new webpack.DefinePlugin({
       IS_PRODUCTION: process.env.NODE_ENV === 'production',
       URL: JSON.stringify(process.env.NODE_ENV === 'production' ? 'http://localhost:3000' : 'http://localhost:3000'),
-      ASSETS: JSON.stringify(process.env.NODE_ENV === 'production' ? 'http://localhost:3000/public' : 'http://localhost:3000/public')
+      ASSETS: JSON.stringify(process.env.NODE_ENV === 'production' ? 'http://localhost:3000/public' : 'http://localhost:3000/public'),
+      API: JSON.stringify(process.env.NODE_ENV === 'production' ? 'http://localhost:3000/api' : 'http://localhost:3000/api'),
     })
   ],
   target: 'node'

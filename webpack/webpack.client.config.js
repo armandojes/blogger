@@ -56,6 +56,7 @@ const config = {
       IS_PRODUCTION: process.env.NODE_ENV === 'production' ? true : false,
       URL: JSON.stringify(process.env.NODE_ENV === 'production' ? 'http://localhost:3000' : 'http://localhost:3000'),
       ASSETS: JSON.stringify(process.env.NODE_ENV === 'production' ? 'http://localhost:3000/public' : 'http://localhost:3000/public'),
+      API: JSON.stringify(process.env.NODE_ENV === 'production' ? 'http://localhost:3000/api' : 'http://localhost:3000/api'),
     })
   ],
   target: 'web'

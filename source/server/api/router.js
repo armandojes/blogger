@@ -1,9 +1,9 @@
-import { Router } from 'express'
-import user from './user'
+import { json, Router } from 'express'
+import userRouter from './components/users/router'
 
 const router = Router()
-
-router.use('/user', user)
+router.use(json())
+router.use('/user', userRouter)
 
 router.get('/', (request, response) => {
   response.send('hello index API')
