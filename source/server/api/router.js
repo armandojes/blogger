@@ -1,8 +1,11 @@
 import { json, Router } from 'express'
 import userRouter from './components/users/router'
+import response from './middlewares/response'
 
 const router = Router()
 router.use(json())
+router.use(response)
+
 router.use('/user', userRouter)
 
 router.get('/', (request, response) => {
@@ -12,8 +15,11 @@ router.get('/', (request, response) => {
 
 // Error handler router level
 router.use((_, response) => {
-  response.status(404)
-  response.send('NOT FOUND')
+  response.error({
+    statusCode: 404,
+    status: 'Not found',
+    errorMessage: 'Not found'
+  })
 })
 
 export default router

@@ -6,12 +6,12 @@ export const databaseConfig = {
   port: 3306
 }
 
-export const jwt = {
+export const jwtConfig = {
   key: 'test',
   session_time: 'test'
 }
 
 export default {
   databaseConfig,
-  jwt
+  jwtConfig
 }

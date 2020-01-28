@@ -1,12 +1,12 @@
 import { verify as veryfyJWT, sign as signJWT } from 'jsonwebtoken'
-import { jsonwebtoken } from '../config.js'
+import { jwtConfig } from '../config.js'
 
 export function verify (accessToken) {
   return new Promise((resolve) => {
     if (accessToken === null || accessToken === '') {
       resolve(false)
     } else {
-      veryfyJWT(accessToken, jsonwebtoken.key, (error, data) => {
+      veryfyJWT(accessToken, jwtConfig.key, (error, data) => {
         if (error) { resolve(false) } else { resolve(data) }
       })
     }
@@ -14,7 +14,7 @@ export function verify (accessToken) {
 }
 
 export function sign (data) {
-  const accessToken = signJWT(data, jsonwebtoken.key)
+  const accessToken = signJWT(data, jwtConfig.key, { expiresIn: '7d' })
   return accessToken
 }
 
