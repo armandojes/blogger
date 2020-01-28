@@ -45,7 +45,8 @@ const config = {
       api_helpers: path.resolve(__dirname, '../source/server/api/helpers'),
       api_modules: path.resolve(__dirname, '../source/server/api/modules'),
       api_models: path.resolve(__dirname, '../source/server/api/models'),
-      components: path.resolve(__dirname, '../source/app/components')
+      components: path.resolve(__dirname, '../source/app/components'),
+      flux: path.resolve(__dirname, '../source/app/flux')
     }
   },
   plugins: [

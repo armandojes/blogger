@@ -14,7 +14,10 @@ function Login () {
     e.preventDefault()
     setLoading(true)
     const response = await requests.user.login({ username, password })
-    console.log(response)
+    if (response.error) {
+      window.alert(response.errorMessage)
+    }
+    setLoading(false)
   }
 
   return (
