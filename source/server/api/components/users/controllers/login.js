@@ -31,7 +31,11 @@ async function login (request, response) {
   })
 
   response.success({
-    token: tokken
+    token: tokken,
+    id: userData.id,
+    fullname: userData.fullname,
+    email: userData.email,
+    username: userData.username
   })
 }
 

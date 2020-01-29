@@ -3,22 +3,20 @@ import style from './style'
 import Container from 'components/container'
 import Prealoder from 'components/preloader'
 import { useState } from 'react-fetch-ssr'
-import requests from 'helpers/requests'
+import { startLogin } from 'flux/session'
+import { useSelector, useDispatch } from 'react-redux'
 
 function Login () {
-  const [loading, setLoading] = useState(false)
+  const dispatch = useDispatch()
   const [username, setUsername] = useState('')
   const [password, setpassword] = useState('')
 
-  const handleSubmit = async e => {
+  const handleSubmit = e => {
     e.preventDefault()
-    setLoading(true)
-    const response = await requests.user.login({ username, password })
-    if (response.error) {
-      window.alert(response.errorMessage)
-    }
-    setLoading(false)
+    dispatch(startLogin({ username, password }))
   }
+
+  const loading = useSelector(state => state.session.loading)
 
   return (
     <Container className={style.body}>

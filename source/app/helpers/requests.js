@@ -7,8 +7,12 @@ const baseUrl = API
 async function connect (config) {
   config.url = `${baseUrl}${config.url}`
   config.method = config.method || 'GET'
-  const response = await axios(config)
-  return response.data
+  try {
+    var response = await axios(config)
+    return response.data
+  } catch (error) {
+    return error.response.data
+  }
 }
 
 const request = {
