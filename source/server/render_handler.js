@@ -7,6 +7,7 @@ import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import ReduxThunk from 'redux-thunk'
 import reducer from 'flux/reducer'
+import { setLogged } from 'flux/session'
 
 async function renderHandler (request, response) {
   // create store
@@ -16,6 +17,10 @@ async function renderHandler (request, response) {
       ReduxThunk
     )
   )
+
+  // parse cookkie to redux state
+  const session = request.cookies.__session__ ? JSON.parse(request.cookies.__session__) : null
+  store.dispatch(setLogged(session))
 
   // render
   const { content, states } = await renderToStringAsync(

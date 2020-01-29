@@ -11,7 +11,7 @@ const setLoading = flux.createAction('SET_LOADING', (state, payload) => {
   }
 })
 
-const setLogged = flux.createAction('SET_LOGGED', (state, payload) => {
+export const setLogged = flux.createAction('SET_LOGGED', (state, payload) => {
   return {
     ...state,
     ...payload

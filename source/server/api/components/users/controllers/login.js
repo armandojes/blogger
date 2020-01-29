@@ -5,7 +5,7 @@ async function login (request, response) {
   // var username contain username or password
   const { username, password } = request.body
   var userData = await user.getFromUsername(username) || await user.getFromEmail(username)
-
+  user.end()
   // user not found
   if (!userData) {
     return response.error({

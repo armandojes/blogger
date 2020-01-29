@@ -1,4 +1,4 @@
-import { newQuery } from 'api_modules/database'
+import { newQuery, end } from 'api_modules/database'
 
 const user = {
   async getFromUsername (username) {
@@ -15,7 +15,9 @@ const user = {
     query.where('email', email)
     const userData = await query.fetch_single()
     return userData
-  }
+  },
+
+  end: end
 }
 
 export default user

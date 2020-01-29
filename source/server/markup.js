@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-function markup (content, states, head) {
+function markup (content, states, reduxState) {
   return `
     <!DOCTYPE html>
     <html lang="es">
@@ -14,6 +14,7 @@ function markup (content, states, head) {
       <div id="render_target">${content || ''}</div>
       <script>${states}</script>
       <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+      <script>window.__REDUX_STATE__ = ${JSON.stringify(reduxState)}</script>
       <script src="${ASSETS}/client.js"></script>
       </body>
     </html>

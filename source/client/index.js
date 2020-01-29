@@ -11,6 +11,8 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import ReduxThunk from 'redux-thunk'
 import { logger } from 'redux-logger'
 
+const reduxState = window.__REDUX_STATE__ || null
+
 const enhancer = IS_PRODUCTION
   ? applyMiddleware(ReduxThunk)
   : composeWithDevTools(applyMiddleware(ReduxThunk, logger))
@@ -18,6 +20,7 @@ const enhancer = IS_PRODUCTION
 // creando store
 var store = createStore(
   reducer,
+  reduxState,
   enhancer
 )
 
