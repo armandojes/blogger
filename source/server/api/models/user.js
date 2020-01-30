@@ -1,23 +1,21 @@
-import { newQuery, end } from 'api_modules/database'
+import Model from 'api_modules/model'
 
-const user = {
+class User extends Model {
   async getFromUsername (username) {
-    const query = newQuery()
-    query.table('users')
-    query.where('username', username)
-    const userdata = await query.fetch_single()
+    const tableInstanced = this.connection.table('users')
+    tableInstanced.where('username', username)
+    const userdata = await tableInstanced.fetch_single()
+    console.log(this.connection.getId())
     return userdata
-  },
+  }
 
   async getFromEmail (email) {
-    const query = newQuery()
-    query.table('users')
-    query.where('email', email)
-    const userData = await query.fetch_single()
-    return userData
-  },
-
-  end: end
+    const tableInstanced = this.connection.table('users')
+    tableInstanced.where('email', email)
+    const userdata = await tableInstanced.fetch_single()
+    console.log(this.connection.getId())
+    return userdata
+  }
 }
 
-export default user
+export default User

@@ -1,129 +1,148 @@
 import { createConnection, format } from 'mysql'
 import { databaseConfig } from '../config'
 
-const database = {
+const database = () => {
+  const object = {
+    currentConnection: null,
 
-  connection: null,
-
-  // make a new conexion if not before exist
-  create_connection () {
-    if (this.connection) return Promise.resolve(this.connection)
-    const database = createConnection(databaseConfig)
-    return new Promise((resolve, reject) => {
-      database.connect(error => {
-        if (!error) this.connection = database
-        if (!error) resolve(database)
-        else reject(error)
-      })
-    })
-  },
-
-  // transform callback to promise
-  query_promised (sql) {
-    return new Promise((resolve) => {
-      this.connection.query(sql, (error, data, fields) => {
-        if (error) console.log('[error_query]', error)
-        const dataParsed = data ? JSON.parse(JSON.stringify(data)) : {}
-        resolve(dataParsed)
-      })
-    })
-  },
-
-  // query create conexion before if nox exist
-  async query (sql) {
-    await this.create_connection()
-    return this.query_promised(sql)
-  },
-
-  // closeConexion DB ab set connection = null
-  async end () {
-    if (!this.connection) return Promise.resolve(true)
-    return new Promise((resolve, reject) => {
-      this.connection.end(error => {
-        if (!error) {
-          this.connection = null
-          resolve(true)
-        } else {
-          console.log('error de desconexion', error)
-          reject(error)
-        }
-      })
-    })
-  }
-}
-
-// creador de consultas
-export function newQuery () {
-  return {
-    TABLE_NAME: '',
-    WHERE: '',
-    ORDER_BY: '',
-    SQL: '',
-    LIMIT: '',
-
-    get_id_connection () {
-      return database.connection
-        ? database.connection.threadId
+    // get currenct id database conection
+    getId () {
+      return object.currentConnection
+        ? { state: object.currentConnection.state, id: object.currentConnection.threadId }
         : null
     },
 
+    // create a new database conection
+    createConnection  () {
+      if (object.currentConnection) return false
+      const database = createConnection(databaseConfig)
+      return new Promise((resolve, reject) => {
+        database.connect(error => {
+          if (!error) {
+            object.currentConnection = database
+            resolve(database)
+          } else reject(error)
+        })
+      })
+    },
+
+    // create a new instance table
     table (tableName) {
-      this.TABLE_NAME = tableName
+      const tableInstanced = {
+        TABLE_NAME: tableName || '',
+        WHERE: '',
+        ORDER_BY: '',
+        SQL: '',
+        LIMIT: '',
+
+        table (tableName) {
+          tableInstanced.TABLE_NAME = tableName
+        },
+
+        where (identifier, value) {
+          tableInstanced.WHERE = tableInstanced.WHERE === ''
+            ? format('WHERE ?? = ?', [identifier, value])
+            : tableInstanced.WHERE + ' ' + format('AND ?? = ?', [identifier, value])
+        },
+
+        limit (limit, start) {
+          tableInstanced.LIMIT = start
+            ? `LIMIT ${start}, ${limit}`
+            : `LIMIT ${limit}`
+        },
+
+        order_by (identifier, value) {
+          tableInstanced.ORDER_BY = format(`ORDER BY ?? ${value}`, identifier)
+        },
+
+        async insert (data) {
+          tableInstanced.SQL = format('INSERT INTO ?? SET ?', [tableInstanced.TABLE_NAME, data])
+          const { insertId } = await object.query(tableInstanced.SQL)
+          return insertId || false
+        },
+
+        async update (dataToUpdate) {
+          tableInstanced.SQL = format(`UPDATE ?? SET ? ${tableInstanced.WHERE} ${tableInstanced.ORDER_BY} ${tableInstanced.LIMIT}`, [tableInstanced.TABLE_NAME, dataToUpdate])
+          const { affectedRows } = await object.query(tableInstanced.SQL)
+          return affectedRows
+        },
+
+        async delete () {
+          tableInstanced.SQL = format(`DELETE FROM ?? ${tableInstanced.WHERE} ${tableInstanced.ORDER_BY} ${tableInstanced.LIMIT} `, [tableInstanced.TABLE_NAME])
+          const { affectedRows } = await object.query(tableInstanced.SQL)
+          return affectedRows
+        },
+
+        async fetch_single (arrayOfFields = '*') {
+          tableInstanced.SQL = format(`SELECT ?? FROM ?? ${tableInstanced.WHERE} ${tableInstanced.ORDER_BY} LIMIT 1`, [arrayOfFields, tableInstanced.TABLE_NAME])
+          const data = await object.query(tableInstanced.SQL)
+          return data.length > 0 ? data[0] : false
+        },
+
+        async fetch (arrayOfFields = '*') {
+          tableInstanced.SQL = format(`SELECT ?? FROM ?? ${tableInstanced.WHERE} ${tableInstanced.ORDER_BY} ${tableInstanced.LIMIT}`, [arrayOfFields, tableInstanced.TABLE_NAME]).trim()
+          const data = await object.query(tableInstanced.SQL)
+          return data.length > 0 ? data : false
+        }
+      }
+      return tableInstanced
     },
 
-    where (identifier, value) {
-      this.WHERE = this.WHERE === ''
-        ? format('WHERE ?? = ?', [identifier, value])
-        : this.WHERE + ' ' + format('AND ?? = ?', [identifier, value])
+    // transform callback to promise
+    queryToPromise (sql) {
+      return new Promise(resolve => {
+        object.currentConnection.query(sql, (error, data, fields) => {
+          if (error) console.log('[error_query]', error)
+          const dataParsed = data ? JSON.parse(JSON.stringify(data)) : {}
+          resolve(dataParsed)
+        })
+      })
     },
 
-    limit (limit, start) {
-      this.LIMIT = start
-        ? `LIMIT ${start}, ${limit}`
-        : `LIMIT ${limit}`
+    // create a new database connection if not exist
+    async query (sql) {
+      if (!object.currentConnection) await object.createConnection()
+      return object.queryToPromise(sql)
     },
 
-    order_by (identifier, value) {
-      this.ORDER_BY = format(`ORDER BY ?? ${value}`, identifier)
-    },
-
-    async insert (data) {
-      this.SQL = format('INSERT INTO ?? SET ?', [this.TABLE_NAME, data])
-      const { insertId } = await database.query(this.SQL)
-      return insertId || false
-    },
-
-    async update (dataToUpdate) {
-      this.SQL = format(`UPDATE ?? SET ? ${this.WHERE} ${this.ORDER_BY} ${this.LIMIT}`, [this.TABLE_NAME, dataToUpdate])
-      const { affectedRows } = await database.query(this.SQL)
-      return affectedRows
-    },
-
-    async delete () {
-      this.SQL = format(`DELETE FROM ?? ${this.WHERE} ${this.ORDER_BY} ${this.LIMIT} `, [this.TABLE_NAME])
-      const { affectedRows } = await database.query(this.SQL)
-      return affectedRows
-    },
-
-    async fetch_single (arrayOfFields = '*') {
-      this.SQL = format(`SELECT ?? FROM ?? ${this.WHERE} ${this.ORDER_BY} LIMIT 1`, [arrayOfFields, this.TABLE_NAME])
-      const data = await database.query(this.SQL)
-      return data.length > 0 ? data[0] : false
-    },
-
-    async fetch (arrayOfFields = '*') {
-      this.SQL = format(`SELECT ?? FROM ?? ${this.WHERE} ${this.ORDER_BY} ${this.LIMIT}`, [arrayOfFields, this.TABLE_NAME]).trim()
-      const data = await database.query(this.SQL)
-      return data.length > 0 ? data : false
+    // end current database conection
+    async close () {
+      if (!object.currentConnection) return Promise.resolve(true)
+      return new Promise((resolve, reject) => {
+        object.currentConnection.end(error => {
+          if (!error) {
+            object.currentConnection = null
+            resolve(true)
+          } else {
+            console.log('error de desconexion', error)
+            reject(error)
+          }
+        })
+      })
     }
   }
+  return object
 }
 
-// cerrar conexion;
-export function end () {
-  return database.end()
-}
-export default {
-  newQuery,
-  end
-}
+export default database
+
+/*
+  README
+  this is for connect a database mysql
+  require "mysql": "^2.18.1" from NPM
+  when you execute this function return this methods
+  getId = getIdCurrentConection
+  table = will create a new instance of table
+  close = close current conection
+
+  example
+  const conecction = database()
+
+  const users = connetion('users')
+  const result = users.get_list()
+
+  const posts = connetion('posts')
+  const result = posts.get_list()
+
+  conecction.close()
+*/
