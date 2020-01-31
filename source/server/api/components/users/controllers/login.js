@@ -1,10 +1,11 @@
-import User from 'api_models/user'
+import Users from 'api_models/users'
 import { sign } from 'api_helpers/security'
 
 async function login (request, response) {
-  const user = new User()
+  const user = new Users()
   const { username, password } = request.body
   var userData = await user.getFromUsername(username) || await user.getFromEmail(username)
+  user.destructor()
 
   // user not found
   if (!userData) {
