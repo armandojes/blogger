@@ -19,7 +19,7 @@ const request = {
   user: {
     login (data) {
       return connect({
-        url: '/user/login',
+        url: '/users/login',
         method: 'POST',
         data
       })
