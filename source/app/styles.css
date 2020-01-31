@@ -46,3 +46,8 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
+/* varibles CSS */
+:root {
+  --input-color-border:#9dbff6;
+}
